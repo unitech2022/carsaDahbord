@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_dashboard/constants/style.dart';
 
 class RevenueInfo extends StatelessWidget {
-  final String title;
-  final String amount;
+  final String? title;
+  final String? amount;
 
-  const RevenueInfo({Key key, this.title, this.amount}) : super(key: key);
+  const RevenueInfo({Key? key, this.title, this.amount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

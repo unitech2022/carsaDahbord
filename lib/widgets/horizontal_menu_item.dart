@@ -6,16 +6,16 @@ import 'package:flutter_web_dashboard/constants/style.dart';
 import 'custom_text.dart';
 
 class HorizontalMenuItem extends StatelessWidget {
-    final String itemName;
-  final Function onTap;
-  const HorizontalMenuItem({ Key key, this.itemName, this.onTap }) : super(key: key);
+    final String? itemName;
+  final Function? onTap;
+  const HorizontalMenuItem({ Key? key, this.itemName, this.onTap }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
 
     return InkWell(
-                  onTap: onTap,
+                  onTap: onTap as void Function()?,
                   onHover: (value){
                     value ?
                     menuController.onHover(itemName) : menuController.onHover("not hovering");
@@ -32,7 +32,7 @@ class HorizontalMenuItem extends StatelessWidget {
                           child: Container(
                             width: 6,
                             height: 40,
-                            color: dark,
+                            color: Colors.red,
                           ),
                         ),
                        SizedBox(width:_width / 88),
@@ -42,9 +42,9 @@ class HorizontalMenuItem extends StatelessWidget {
                           child: menuController.returnIconFor(itemName),
                         ),
                         if(!menuController.isActive(itemName))
-                        Flexible(child: CustomText(text: itemName , color: menuController.isHovering(itemName) ? dark : lightGrey,))
+                        Flexible(child: CustomText(text: itemName , color: menuController.isHovering(itemName) ? Colors.white : lightGrey,))
                         else
-                        Flexible(child: CustomText(text: itemName , color:  dark , size: 18, weight: FontWeight.bold,))
+                        Flexible(child: CustomText(text: itemName , color:  Colors.white , size: 18, weight: FontWeight.bold,))
 
                       ],
                     ),

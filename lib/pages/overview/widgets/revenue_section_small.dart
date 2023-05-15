@@ -35,10 +35,10 @@ class RevenueSectionSmall extends StatelessWidget {
                             weight: FontWeight.bold,
                             color: lightGrey,
                           ),
-                          Container(
-                              width: 600,
-                              height: 200,
-                              child: SimpleBarChart.withSampleData()),
+                          // Container(
+                          //     width: 600,
+                          //     height: 200,
+                          //     child: SimpleBarChart.withSampleData()),
                         ],
                       ),
                     ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../../models/home_model.dart';
 import 'info_card_small.dart';
 
 
 class OverviewCardsSmallScreen extends StatelessWidget {
+  final HomeModel model;
 
+  OverviewCardsSmallScreen(this.model);
   @override
   Widget build(BuildContext context) {
    double _width = MediaQuery.of(context).size.width;
@@ -13,8 +16,8 @@ class OverviewCardsSmallScreen extends StatelessWidget {
       child: Column(
         children: [
           InfoCardSmall(
-                        title: "Rides in progress",
-                        value: "7",
+            title: "عدد العملاء",
+            value:model.countUsers.toString(),
                         onTap: () {},
                         isActive: true,
                       ),
@@ -22,24 +25,24 @@ class OverviewCardsSmallScreen extends StatelessWidget {
                         height: _width / 64,
                       ),
                       InfoCardSmall(
-                        title: "Packages delivered",
-                        value: "17",
+                        title: "عدد الطلبات ",
+                        value: model.countOrders.toString(),
                         onTap: () {},
                       ),
                      SizedBox(
                         height: _width / 64,
                       ),
                           InfoCardSmall(
-                        title: "Cancelled delivery",
-                        value: "3",
+                            title: "عدد المنتجات",
+                            value: model.countProduct.toString(),
                         onTap: () {},
                       ),
                       SizedBox(
                         height: _width / 64,
                       ),
                       InfoCardSmall(
-                        title: "Scheduled deliveries",
-                        value: "32",
+                        title: "عدد الأقسام",
+                        value: model.countCategories.toString(),
                         onTap: () {},
                       ),
                   

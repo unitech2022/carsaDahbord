@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_web_dashboard/pages/overview/widgets/info_card.dart';
+import 'package:flutter_web_dashboard/routing/routes.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../../models/home_model.dart';
 
 
 class OverviewCardsMediumScreen extends StatelessWidget {
+final HomeModel model;
+
+OverviewCardsMediumScreen(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +23,12 @@ class OverviewCardsMediumScreen extends StatelessWidget {
         Row(
                   children: [
                     InfoCard(
-                      title: "Rides in progress",
-                      value: "7",
-                      onTap: () {},
+                      title: "عدد العملاء",
+                      value:model.countUsers.toString(),
+                      onTap: () {
+
+                        // Get.to(AddProducts());
+                      },
                   topColor: Colors.orange,
 
                     ),
@@ -24,8 +36,8 @@ class OverviewCardsMediumScreen extends StatelessWidget {
                       width: _width / 64,
                     ),
                     InfoCard(
-                      title: "Packages delivered",
-                      value: "17",
+                      title: "عدد الطلبات ",
+                      value: model.countOrders.toString(),
                   topColor: Colors.lightGreen,
 
                       onTap: () {},
@@ -40,8 +52,8 @@ class OverviewCardsMediumScreen extends StatelessWidget {
                   children: [
              
                     InfoCard(
-                      title: "Cancelled delivery",
-                      value: "3",
+                      title: "عدد المنتجات",
+                      value: model.countProduct.toString(),
                   topColor: Colors.redAccent,
 
                       onTap: () {},
@@ -50,8 +62,8 @@ class OverviewCardsMediumScreen extends StatelessWidget {
                       width: _width / 64,
                     ),
                     InfoCard(
-                      title: "Scheduled deliveries",
-                      value: "32",
+                      title: "عدد الأقسام",
+                      value: model.countCategories.toString(),
                       onTap: () {},
                     ),
                 

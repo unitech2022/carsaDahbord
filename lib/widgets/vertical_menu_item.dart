@@ -6,16 +6,16 @@ import 'package:flutter_web_dashboard/constants/style.dart';
 import 'custom_text.dart';
 
 class VertticalMenuItem extends StatelessWidget {
-  final String itemName;
-  final Function onTap;
-  const VertticalMenuItem({Key key, this.itemName, this.onTap})
+  final String? itemName;
+  final Function? onTap;
+  const VertticalMenuItem({Key? key, this.itemName, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return InkWell(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         onHover: (value) {
           value
               ? menuController.onHover(itemName)
@@ -36,7 +36,7 @@ class VertticalMenuItem extends StatelessWidget {
                     child: Container(
                       width: 3,
                       height: 72,
-                      color: Colors.white,
+                      color: Colors.red,
                     ),
                   ),
                   Expanded(

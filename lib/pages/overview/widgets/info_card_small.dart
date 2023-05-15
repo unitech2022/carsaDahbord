@@ -8,14 +8,14 @@ class InfoCardSmall extends StatelessWidget {
   final bool isActive;
   final Function onTap;
 
-  const InfoCardSmall({Key key,@required this.title,@required this.value, this.isActive = false,@required this.onTap})
+  const InfoCardSmall({Key? key,required this.title,required this.value, this.isActive = false,required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
