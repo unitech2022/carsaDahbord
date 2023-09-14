@@ -93,24 +93,29 @@ class _SupportsScreenState extends State<SupportsScreen> {
               ),
               SizedBox(height: 40),
               Expanded(
-                  child: SuggestionCubit.get(context).loadGetMessages
-                      ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 5,
-                              color: Colors.blue,
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      SuggestionCubit.get(context).loadGetMessages
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 5,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
+                          : TableWidgetMessages(
+                              list: SuggestionCubit.get(context).messages,
+                              name: "JDJDJD",
+                              image: "HDDDDDDD",
+                              id: "1",
+                              label: "الاقسام",
+                              onDelete: false,
+                              onUpdate: false,
                             ),
-                          ),
-                        )
-                      : TableWidgetMessages(
-                          list: SuggestionCubit.get(context).messages,
-                          name: "JDJDJD",
-                          image: "HDDDDDDD",
-                          id: "1",
-                          label: "الاقسام",
-                          onDelete: false,
-                          onUpdate: false,
-                        )),
+                    ],
+                  )),
             ],
           ),
         );
@@ -136,7 +141,9 @@ class TableWidgetMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
       child: Container(
+       width: ResponsiveWidget.isSmallScreen(context)?null:1200,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -150,157 +157,140 @@ class TableWidgetMessages extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Row(
-            //   children: [
-            //     SizedBox(
-            //       width: 10,
-            //     ),
-            //     CustomText(
-            //       text: label,
-            //       color: lightGrey,
-            //       weight: FontWeight.bold,
-            //     ),
-            //   ],
-            // ),
-            DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                columns: [
-                  DataColumn2(
-                    label: Text("Id"),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn(
-                    label: Text('اسم العميل'),
-                  ),
-                  DataColumn(
-                    label: Text('تاريخ'),
-                  ),
-                  DataColumn(
-                    label: Text('تفاصيل'),
-                  ),
-                  DataColumn(
-                    label: Text('حذف'),
-                  ),
-                ],
-                rows: List<DataRow>.generate(list!.length, (index) {
-                  DateTime now =
-                      DateTime.parse(list![index].support!.date.toString());
-                  String formattedDate =
-                      DateFormat('yyyy-MM-dd – kk:mm').format(now);
+        child: DataTable(
+            columnSpacing: 12,
+            horizontalMargin: 12,
+          
+            columns: [
+              DataColumn2(
+                label: Text("Id"),
+                size: ColumnSize.L,
+              ),
+              DataColumn(
+                label: Text('اسم العميل'),
+              ),
+              DataColumn(
+                label: Text('تاريخ'),
+              ),
+              DataColumn(
+                label: Text('تفاصيل'),
+              ),
+              DataColumn(
+                label: Text('حذف'),
+              ),
+            ],
+            rows: List<DataRow>.generate(list!.length, (index) {
+              DateTime now =
+                  DateTime.parse(list![index].support!.date.toString());
+              String formattedDate =
+                  DateFormat('yyyy-MM-dd – kk:mm').format(now);
 
-                  return DataRow(cells: [
-                    DataCell(CustomText(text: "${list![index].support!.id}")),
-                    DataCell(CustomText(text: list![index].sender!.fullName)),
-                    DataCell(CustomText(text: formattedDate)),
-                    DataCell(Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      width: 80,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
-                        color: Colors.green,
-                        onPressed: () {
-                          Get.to(MessagesDetails(
-                              userId: list![index].support!.userId));
-                        },
-                        child: Center(
-                          child: CustomText(
-                            text: "تفاصيل",
-                            color: Colors.white,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
+              return DataRow(cells: [
+                DataCell(CustomText(text: "${list![index].support!.id}")),
+                DataCell(CustomText(text: list![index].sender!.fullName)),
+                DataCell(CustomText(text: formattedDate)),
+                DataCell(Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 50,
+                  width: 80,
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color: Colors.green,
+                    onPressed: () {
+                      Get.to(MessagesDetails(
+                          userId: list![index].support!.userId));
+                    },
+                    child: Center(
+                      child: CustomText(
+                        text: "تفاصيل",
+                        color: Colors.white,
+                        weight: FontWeight.bold,
                       ),
-                    )),
-                    DataCell(Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      width: 80,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
-                        color: Colors.red,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              // return object of type Dialog
-                              return Container(
-                                // height: 200,
-                                child: AlertDialog(
-                                  title: Texts(
-                                      fSize: 18,
-                                      color: Colors.red,
-                                      title: list![index].support!.message,
-                                      weight: FontWeight.bold),
-                                  content: Texts(
-                                      fSize: 20,
-                                      color: Colors.black,
-                                      title:
-                                          "هل أنت متأكد من أنك تريد حذف هذا القسم",
-                                      weight: FontWeight.bold),
-                                  actions: <Widget>[
-                                    // usually buttons at the bottom of the dialog
-                                    MaterialButton(
-                                      minWidth: 50,
-                                      color: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 2),
-                                        child: Text("حذف",
-                                            style: const TextStyle(
-                                                fontFamily: "pnuM",
-                                                color: Colors.white)),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context, 1);
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        "الغاء",
-                                        style: TextStyle(fontFamily: "pnuM"),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context, 0);
-                                      },
-                                    ),
-                                  ],
+                    ),
+                  ),
+                )),
+                DataCell(Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 50,
+                  width: 80,
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color: Colors.red,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          // return object of type Dialog
+                          return Container(
+                            // height: 200,
+                            child: AlertDialog(
+                              title: Texts(
+                                  fSize: 18,
+                                  color: Colors.red,
+                                  title: list![index].support!.message,
+                                  weight: FontWeight.bold),
+                              content: Texts(
+                                  fSize: 20,
+                                  color: Colors.black,
+                                  title:
+                                      "هل أنت متأكد من أنك تريد حذف هذا القسم",
+                                  weight: FontWeight.bold),
+                              actions: <Widget>[
+                                // usually buttons at the bottom of the dialog
+                                MaterialButton(
+                                  minWidth: 50,
+                                  color: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(4)),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 2),
+                                    child: Text("حذف",
+                                        style: const TextStyle(
+                                            fontFamily: "pnuM",
+                                            color: Colors.white)),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, 1);
+                                  },
                                 ),
-                              );
-                            },
-                          ).then((value) {
-                            print(value);
-                            if (value == null) {
-                              return;
-                            } else if (value == 1) {
-                              // SuggestionCubit.get(context).deleteSuggestion(
-                              //     context: context, id: list![index].id);
-                            }
-                          });
+                                TextButton(
+                                  child: Text(
+                                    "الغاء",
+                                    style: TextStyle(fontFamily: "pnuM"),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, 0);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
-                        child: Center(
-                          child: CustomText(
-                            text: "حذف",
-                            color: Colors.white,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
+                      ).then((value) {
+                        print(value);
+                        if (value == null) {
+                          return;
+                        } else if (value == 1) {
+                          // SuggestionCubit.get(context).deleteSuggestion(
+                          //     context: context, id: list![index].id);
+                        }
+                      });
+                    },
+                    child: Center(
+                      child: CustomText(
+                        text: "حذف",
+                        color: Colors.white,
+                        weight: FontWeight.bold,
                       ),
-                    )),
-                  ]);
-                })),
-          ],
-        ),
+                    ),
+                  ),
+                )),
+              ]);
+            })),
       ),
     );
   }

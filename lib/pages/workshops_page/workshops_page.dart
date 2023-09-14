@@ -92,15 +92,22 @@ class _WorkshopsScreenState extends State<WorkshopsScreen> {
                       );
                     })),
             SizedBox(height: 40),
-            WorkshopCubit.get(context).loadWorkShops
-                ? Center(
-                    child: LinearProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: homeColor,
-                    ),
-                  )
-                : TableWidgetWorkShop(
-                    list: WorkshopCubit.get(context).workshops,cateId:1)
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: [
+                  WorkshopCubit.get(context).loadWorkShops
+                      ? Center(
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.grey,
+                            color: homeColor,
+                          ),
+                        )
+                      : TableWidgetWorkShop(
+                          list: WorkshopCubit.get(context).workshops,cateId:1),
+                ],
+              ),
+            )
           ]),
         );
       },
@@ -122,7 +129,9 @@ class TableWidgetWorkShop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       child: Container(
+        width: ResponsiveWidget.isSmallScreen(context)?null:1200,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -136,150 +145,145 @@ class TableWidgetWorkShop extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                columns: [
-                  DataColumn2(
-                    label: Text("Id"),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn(
-                    label: Text('اسم الورشة '),
-                  ),
-                  DataColumn(
-                    label: Text("العنوان"),
-                  ),
-                  DataColumn(
-                    label: Text('رقم الهاتف'),
-                  ),
-                  DataColumn(
-                    label: Text('التفاصيل'),
-                  ),
-                  DataColumn(
-                    label: Text('الحالة'),
-                  ),
-                ],
-                rows: List<DataRow>.generate(list.length, (index) {
-                  return DataRow(cells: [
-                    DataCell(CustomText(text: "${list[index].id}")),
-                    DataCell(CustomText(text: list[index].name)),
-                    DataCell(CustomText(text: list[index].address)),
-                    DataCell(CustomText(text: list[index].phone.toString())),
-                    DataCell(Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      width: 120,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
-                        color: Colors.green,
-                        onPressed: () {
-                          Get.to(DetailsWorkShop(list[index]));
-                        },
-                        child: Center(
-                          child: CustomText(
-                            text: "التفاصيل",
-                            color: Colors.white,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
+        child: DataTable(
+            columnSpacing: 12,
+            horizontalMargin: 12,
+          
+            columns: [
+              DataColumn2(
+                label: Text("Id"),
+                size: ColumnSize.L,
+              ),
+              DataColumn(
+                label: Text('اسم الورشة '),
+              ),
+              DataColumn(
+                label: Text("العنوان"),
+              ),
+              DataColumn(
+                label: Text('رقم الهاتف'),
+              ),
+              DataColumn(
+                label: Text('التفاصيل'),
+              ),
+              DataColumn(
+                label: Text('الحالة'),
+              ),
+            ],
+            rows: List<DataRow>.generate(list.length, (index) {
+              return DataRow(cells: [
+                DataCell(CustomText(text: "${list[index].id}")),
+                DataCell(CustomText(text: list[index].name)),
+                DataCell(CustomText(text: list[index].address)),
+                DataCell(CustomText(text: list[index].phone.toString())),
+                DataCell(Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 50,
+                  width: 120,
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color: Colors.green,
+                    onPressed: () {
+                      Get.to(DetailsWorkShop(list[index]));
+                    },
+                    child: Center(
+                      child: CustomText(
+                        text: "التفاصيل",
+                        color: Colors.white,
+                        weight: FontWeight.bold,
                       ),
-                    )),
-                    DataCell(Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      width: 80,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
-                        color:
-                            list[index].status == 0 ? Colors.red : Colors.green,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              // return object of type Dialog
-                              return Container(
-                                // height: 200,
-                                child: AlertDialog(
-                                  title: Texts(
-                                      fSize: 18,
-                                      color: Colors.red,
-                                      title: list![index].name,
-                                      weight: FontWeight.bold),
-                                  content: Texts(
-                                      fSize: 20,
-                                      color: Colors.black,
-                                      title: list[index].status == 0
-                                          ? "تشغيل الورشة"
-                                          : "ايقاف الورشة",
-                                      weight: FontWeight.bold),
-                                  actions: <Widget>[
-                                    // usually buttons at the bottom of the dialog
-                                    MaterialButton(
-                                      minWidth: 50,
-                                      color: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 2),
-                                        child: Text(
-                                            list[index].status == 0
-                                                ? "تشغيل"
-                                                : "ايقاف",
-                                            style: const TextStyle(
-                                                fontFamily: "pnuM",
-                                                color: Colors.white)),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context, 1);
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        "الغاء",
-                                        style: TextStyle(fontFamily: "pnuM"),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context, 0);
-                                      },
-                                    ),
-                                  ],
+                    ),
+                  ),
+                )),
+                DataCell(Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 50,
+                  width: 80,
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color:
+                        list[index].status == 0 ? Colors.red : Colors.green,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          // return object of type Dialog
+                          return Container(
+                            // height: 200,
+                            child: AlertDialog(
+                              title: Texts(
+                                  fSize: 18,
+                                  color: Colors.red,
+                                  title: list![index].name,
+                                  weight: FontWeight.bold),
+                              content: Texts(
+                                  fSize: 20,
+                                  color: Colors.black,
+                                  title: list[index].status == 0
+                                      ? "تشغيل الورشة"
+                                      : "ايقاف الورشة",
+                                  weight: FontWeight.bold),
+                              actions: <Widget>[
+                                // usually buttons at the bottom of the dialog
+                                MaterialButton(
+                                  minWidth: 50,
+                                  color: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(4)),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 2),
+                                    child: Text(
+                                        list[index].status == 0
+                                            ? "تشغيل"
+                                            : "ايقاف",
+                                        style: const TextStyle(
+                                            fontFamily: "pnuM",
+                                            color: Colors.white)),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, 1);
+                                  },
                                 ),
-                              );
-                            },
-                          ).then((value) {
-                            print(value);
-                            if (value == null) {
-                              return;
-                            } else if (value == 1) {
-                              WorkshopCubit.get(context).updateWorkShopStatus(
-                                  id: list[index].id,
-                                  status: list[index].status == 0 ? 1 : 0,
-                                  cateId: cateId);
-                            }
-                          });
+                                TextButton(
+                                  child: Text(
+                                    "الغاء",
+                                    style: TextStyle(fontFamily: "pnuM"),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, 0);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
-                        child: Center(
-                          child: CustomText(
-                            text: status[list[index].status!],
-                            color: Colors.white,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
+                      ).then((value) {
+                        print(value);
+                        if (value == null) {
+                          return;
+                        } else if (value == 1) {
+                          WorkshopCubit.get(context).updateWorkShopStatus(
+                              id: list[index].id,
+                              status: list[index].status == 0 ? 1 : 0,
+                              cateId: cateId);
+                        }
+                      });
+                    },
+                    child: Center(
+                      child: CustomText(
+                        text: status[list[index].status!],
+                        color: Colors.white,
+                        weight: FontWeight.bold,
                       ),
-                    ))
-                  ]);
-                })),
-          ],
-        ),
+                    ),
+                  ),
+                ))
+              ]);
+            })),
       ),
     );
   }

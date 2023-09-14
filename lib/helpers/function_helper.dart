@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/user_model.dart';
@@ -64,18 +65,15 @@ replacePage({required context, page}) {
       .pushReplacement(MaterialPageRoute(builder: (context) => page));
 }
 
-
 popMultiplePages(context, count) {
   for (int i = 0; i < count; i++) {
     Navigator.of(context).pop();
   }
 }
 
-
 flexSpace(int f) {
   return Flexible(flex: f, child: Container());
 }
-
 
 bool isLogin() {
   return token != "";
@@ -130,20 +128,63 @@ Future logOut() async {
   await prefs.remove('token');
 }
 
+// openGoogleMapLocation(lat, lng) async {
+//   String mapOptions = [
+//     // 'saddr=${locData.latitude},${locData.longitude}',
+//     'daddr=$lat,$lng',
+//     'dir_action=navigate'
+//   ].join('&');
+
+//   final url = 'https://www.google.com/maps?$mapOptions';
+//   if (await canLaunch(url)) {
+//     await launch(url);
+//   } else {
+//     throw 'Could not launch $url';
+//   }
+// }
+
 openGoogleMapLocation(lat, lng) async {
   String mapOptions = [
-    // 'saddr=${locData.latitude},${locData.longitude}',
+   'saddr=${locData.latitude},${locData.longitude}',
     'daddr=$lat,$lng',
     'dir_action=navigate'
   ].join('&');
 
-  final url = 'https://www.google.com/maps?$mapOptions';
-  if (await canLaunch(url)) {
-    await launch(url);
+  String url = 'https://www.google.com/maps?$mapOptions';
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url),mode: LaunchMode.inAppWebView);
   } else {
     throw 'Could not launch $url';
   }
 }
+
+late String currentLocation = "";
+LocationData locData = LocationData.fromMap({});
+Future getLocation() async {
+  Location location = Location();
+  bool serviceEnabled;
+  PermissionStatus permissionGranted;
+  serviceEnabled = await location.serviceEnabled();
+  if (!serviceEnabled) {
+    serviceEnabled = await location.requestService();
+    if (!serviceEnabled) {
+      return;
+    }
+  }
+
+  permissionGranted = await location.hasPermission();
+  if (permissionGranted == PermissionStatus.denied) {
+    permissionGranted = await location.requestPermission();
+    if (permissionGranted != PermissionStatus.granted) {
+      return;
+    }
+  }
+
+  locData = await location.getLocation();
+  print("${locData.latitude} lat:${locData.longitude} LNG:");
+}
+
+
 class MyHttpOverrides extends HttpOverrides{
   @override
   HttpClient createHttpClient(SecurityContext? context){

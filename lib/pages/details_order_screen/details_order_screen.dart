@@ -9,11 +9,10 @@ import 'package:flutter_web_dashboard/helpers/order_model.dart';
 import 'package:flutter_web_dashboard/pages/orders_screen/orders_screen.dart';
 import 'package:flutter_web_dashboard/widgets/texts.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:ui' as ui;
 import '../../helpers/function_helper.dart';
 import '../../helpers/reponsiveness.dart';
 import '../../widgets/CustomDropDownWidget.dart';
-import '../../widgets/custom_text.dart';
 
 class DetailsOrderScreen extends StatefulWidget {
   final OrderModel orderModel;
@@ -281,10 +280,13 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                                       "العدد المطلوب : ",
                                       cart.cartModel!.quantity.toString(),
                                       Colors.green),
-                                  DetailsProduct(
-                                      "الاجمالى  : ",
-                                      cart.cartModel!.total.toString(),
-                                      Colors.blue)
+                                  Directionality(
+                                    textDirection:ui.TextDirection.ltr,
+                                    child: DetailsProduct(
+                                        "الاجمالى  : ",
+                                        cart.cartModel!.total!.toStringAsFixed(2),
+                                        Colors.blue),
+                                  )
                                 ],
                               ),
                             );
@@ -392,25 +394,28 @@ class ContainerDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        RichText(
-          textAlign: TextAlign.start,
-          text: TextSpan(
-            text: title,
-            style: TextStyle(
-                color: Colors.black.withOpacity(.5),
-                fontFamily: "pnuB",
-                fontSize: 15,
-                fontWeight: FontWeight.bold),
-            children: <TextSpan>[
-              TextSpan(
-                  text: value,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "pnuB",
-                    color: Colors.green,
-                    fontSize: 16,
-                  )),
-            ],
+        Directionality(
+          textDirection: ui.TextDirection.rtl,
+          child: RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              text: title,
+              style: TextStyle(
+                  color: Colors.black.withOpacity(.5),
+                  fontFamily: "pnuB",
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+              children: <TextSpan>[
+                TextSpan(
+                    text: value,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "pnuB",
+                      color: Colors.green,
+                      fontSize: 16,
+                    )),
+              ],
+            ),
           ),
         ),
       ],

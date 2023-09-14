@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_dashboard/helpers/function_helper.dart';
+import 'package:flutter_web_dashboard/helpers/reponsiveness.dart';
 import 'package:flutter_web_dashboard/models/user_model.dart';
 import 'package:flutter_web_dashboard/widgets/texts.dart';
 
@@ -68,7 +69,7 @@ class _MessagesDetailsState extends State<MessagesDetails> {
             child: Container(
 
               margin: EdgeInsets.symmetric(vertical: 20),
-                width: 600,
+                width:ResponsiveWidget.isSmallScreen(context)?double.infinity: 600,
                 height: 700,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -98,7 +99,7 @@ class _MessagesDetailsState extends State<MessagesDetails> {
                          mainAxisAlignment:message.support!.sender=="admin"? MainAxisAlignment.end:MainAxisAlignment.start,
                           children: [
                          Container(
-                           width: 500,
+                           width:ResponsiveWidget.isSmallScreen(context)?double.infinity: 500,
                            margin: EdgeInsets.all(3),
                            padding: EdgeInsets.all(3),
 
@@ -198,7 +199,7 @@ class _MessagesDetailsState extends State<MessagesDetails> {
                             child: CustomTextField2(
                               controller: _controllerMessages,
                               hint: "اضافة رد جديد",
-                              inputType: TextInputType.number,
+                              inputType: TextInputType.text,
                             ),
                           ),
                           SizedBox(width: 20,),

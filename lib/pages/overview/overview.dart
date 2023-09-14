@@ -3,25 +3,21 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_dashboard/bloc/app_cubit/app_cubit.dart';
-import 'package:flutter_web_dashboard/bloc/order_cubit/order_cubit.dart';
 import 'package:flutter_web_dashboard/bloc/setting_bloc/setting_cubit.dart';
+import 'package:flutter_web_dashboard/helpers/function_helper.dart';
 import 'package:flutter_web_dashboard/helpers/reponsiveness.dart';
 import 'package:flutter_web_dashboard/constants/controllers.dart';
-import 'package:flutter_web_dashboard/pages/overview/widgets/available_drivers_table.dart';
 import 'package:flutter_web_dashboard/pages/overview/widgets/overview_cards_large.dart';
 import 'package:flutter_web_dashboard/pages/overview/widgets/overview_cards_medium.dart';
 import 'package:flutter_web_dashboard/pages/overview/widgets/overview_cards_small.dart';
-import 'package:flutter_web_dashboard/pages/overview/widgets/revenue_section_large.dart';
 import 'package:flutter_web_dashboard/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../constants/style.dart';
 import '../../helpers/order_model.dart';
 import '../../widgets/texts.dart';
 import '../details_order_screen/details_order_screen.dart';
 import '../orders_screen/orders_screen.dart';
-import 'widgets/revenue_section_small.dart';
 
 class OverviewPage extends StatefulWidget {
   @override
@@ -29,14 +25,14 @@ class OverviewPage extends StatefulWidget {
 }
 
 class _OverviewPageState extends State<OverviewPage> {
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    getLocation();
     AppCubit.get(context).getHomeData();
     SettingCubit.get(context).getSitting();
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,9 +52,12 @@ class _OverviewPageState extends State<OverviewPage> {
               ],
             ),
           ),
+          SizedBox(
+            height: 30,
+          ),
           BlocConsumer<AppCubit, AppState>(
             listener: (context, state) {
-              // TODO: implement listener
+            
             },
             builder: (context, state) {
               return AppCubit.get(context).load
@@ -71,42 +70,47 @@ class _OverviewPageState extends State<OverviewPage> {
                       ),
                     )
                   : Expanded(
-                      child: ListView(
-                      children: [
-                        if (ResponsiveWidget.isLargeScreen(context) ||
-                            ResponsiveWidget.isMediumScreen(context))
-                          if (ResponsiveWidget.isCustomSize(context))
-                            OverviewCardsMediumScreen(
-                                AppCubit.get(context).homeModel)
+                      child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          if (ResponsiveWidget.isLargeScreen(context) ||
+                              ResponsiveWidget.isMediumScreen(context))
+                            if (ResponsiveWidget.isCustomSize(context))
+                              OverviewCardsMediumScreen(
+                                  AppCubit.get(context).homeModel)
+                            else
+                              OverviewCardsLargeScreen(
+                                  AppCubit.get(context).homeModel)
                           else
-                            OverviewCardsLargeScreen(
-                                AppCubit.get(context).homeModel)
-                        else
-                          OverviewCardsSmallScreen(
-                              AppCubit.get(context).homeModel),
-                        // if (!ResponsiveWidget.isSmallScreen(context))
-                        //   RevenueSectionLarge()
-                        // else
-                        //   RevenueSectionSmall(),
+                            OverviewCardsSmallScreen(
+                                AppCubit.get(context).homeModel),
+                          // if (!ResponsiveWidget.isSmallScreen(context))
+                          //   RevenueSectionLarge()
+                          // else
+                          //   RevenueSectionSmall(),
 
-                        SizedBox(height: 10),
-                        Text("طلبات جديدة",
-                            style: TextStyle(
-                              fontFamily: "pnuB",
-                              fontSize: 20,
-                              color: Colors.black,
-                            )),
-                      TableWidgetOrders(
-                              list: AppCubit.get(context).homeModel.orders,
-                              name: "JDJDJD",
-                              image: "HDDDDDDD",
-                              id: "1",
-                              label: "الاقسام",
-                              onDelete: true,
-                              onUpdate: false,
-                            )
-
-                      ],
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text("طلبات جديدة",
+                                  style: TextStyle(
+                                    fontFamily: "pnuB",
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  )),
+                            ],
+                          ),
+                          TableWidgetOrders(
+                            list: AppCubit.get(context).homeModel.orders,
+                            name: "JDJDJD",
+                            image: "HDDDDDDD",
+                            id: "1",
+                            label: "الاقسام",
+                            onDelete: true,
+                            onUpdate: false,
+                          )
+                        ],
+                      ),
                     ));
             },
           )
@@ -134,6 +138,7 @@ class TableWidgetOrdersHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -147,10 +152,9 @@ class TableWidgetOrdersHome extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: DataTable2(
+        child: DataTable(
             columnSpacing: 12,
             horizontalMargin: 12,
-            minWidth: 600,
             columns: [
               DataColumn2(
                 label: Text("Id"),
@@ -176,7 +180,7 @@ class TableWidgetOrdersHome extends StatelessWidget {
               DateTime now =
                   DateTime.parse(list![index].order!.createdAt.toString());
               String formattedDate =
-                  DateFormat('yyyy-MM-dd – kk:mm').format(now);
+                  DateFormat.jm("ar").format(now);
               return DataRow(cells: [
                 DataCell(CustomText(text: "${list![index].order!.id}")),
                 DataCell(CustomText(text: list![index].userName)),

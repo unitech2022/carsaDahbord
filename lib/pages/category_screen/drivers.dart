@@ -99,24 +99,29 @@ class _DriversPageState extends State<DriversPage> {
               ),
               SizedBox(height: 10),
               Expanded(
-                  child: CategoryCubit.get(context).loadCategories
-                      ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 5,
-                              color: Colors.blue,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      CategoryCubit.get(context).loadCategories
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 5,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
+                          : TableWidgetCategory(
+                              list: CategoryCubit.get(context).listCategories,
+                              name: "JDJDJD",
+                              image: "HDDDDDDD",
+                              id: "1",
+                              label: "الاقسام",
+                              onDelete: false,
+                              onUpdate: false,
                             ),
-                          ),
-                        )
-                      : TableWidgetCategory(
-                          list: CategoryCubit.get(context).listCategories,
-                          name: "JDJDJD",
-                          image: "HDDDDDDD",
-                          id: "1",
-                          label: "الاقسام",
-                          onDelete: false,
-                          onUpdate: false,
-                        )),
+                    ],
+                  )),
             ],
           ),
         );
@@ -142,7 +147,9 @@ class TableWidgetCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       child: Container(
+           width: ResponsiveWidget.isSmallScreen(context)?null:1200,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -156,170 +163,153 @@ class TableWidgetCategory extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Row(
-            //   children: [
-            //     SizedBox(
-            //       width: 10,
-            //     ),
-            //     CustomText(
-            //       text: label,
-            //       color: lightGrey,
-            //       weight: FontWeight.bold,
-            //     ),
-            //   ],
-            // ),
-            DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                columns: [
-                  DataColumn2(
-                    label: Text("Id"),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn(
-                    label: Text('الاسم'),
-                  ),
-                  DataColumn(
-                    label: Text('الصورة'),
-                  ),
-                  DataColumn(
-                    label: Text('تعـديل'),
-                  ),
-                  DataColumn(
-                    label: Text('حذف'),
-                  ),
-                ],
-                rows: List<DataRow>.generate(
-                    list!.length,
-                    (index) => DataRow(cells: [
-                          DataCell(CustomText(text: "${list![index].id}")),
-                          DataCell(CustomText(text: list![index].name)),
-                          DataCell(Container(
-                            child: Container(
-                              width: 80,
-                              height: 80,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(3),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "$baseUrlImages${list![index].image}",
-                                  height: 60,
-                                  width: 100,
-                                  placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
+        child: DataTable(
+            columnSpacing: 12,
+            horizontalMargin: 12,
+          
+            columns: [
+              DataColumn2(
+                label: Text("Id"),
+                size: ColumnSize.L,
+              ),
+              DataColumn(
+                label: Text('الاسم'),
+              ),
+              DataColumn(
+                label: Text('الصورة'),
+              ),
+              DataColumn(
+                label: Text('تعـديل'),
+              ),
+              DataColumn(
+                label: Text('حذف'),
+              ),
+            ],
+            rows: List<DataRow>.generate(
+                list!.length,
+                (index) => DataRow(cells: [
+                      DataCell(CustomText(text: "${list![index].id}")),
+                      DataCell(CustomText(text: list![index].name)),
+                      DataCell(Container(
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(3),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "$baseUrlImages${list![index].image}",
+                              height: 60,
+                              width: 100,
+                              placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
-                          )),
-                          DataCell(Container(
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            height: 50,
-                            width: 80,
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                              color: Colors.green,
-                              onPressed: () {
-                                Get.to(AddCategoryScreen(list![index], 1,0));
-                              },
-                              child: Center(
-                                child: CustomText(
-                                  text: "تعديل",
-                                  color: Colors.white,
-                                  weight: FontWeight.bold,
-                                ),
-                              ),
+                          ),
+                        ),
+                      )),
+                      DataCell(Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        height: 50,
+                        width: 80,
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          color: Colors.green,
+                          onPressed: () {
+                            Get.to(AddCategoryScreen(list![index], 1,0));
+                          },
+                          child: Center(
+                            child: CustomText(
+                              text: "تعديل",
+                              color: Colors.white,
+                              weight: FontWeight.bold,
                             ),
-                          )),
-                          DataCell(Container(
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            height: 50,
-                            width: 80,
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                              color: Colors.red,
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    // return object of type Dialog
-                                    return Container(
-                                      // height: 200,
-                                      child: AlertDialog(
-                                        title: Texts(
-                                            fSize: 18,
-                                            color: Colors.red,
-                                            title: list![index].name,
-                                            weight: FontWeight.bold),
-                                        content: Texts(
-                                            fSize: 20,
-                                            color: Colors.black,
-                                            title:
-                                                "هل أنت متأكد من أنك تريد حذف هذا القسم",
-                                            weight: FontWeight.bold),
-                                        actions: <Widget>[
-                                          // usually buttons at the bottom of the dialog
-                                          MaterialButton(
-                                            minWidth: 50,
-                                            color: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15, vertical: 2),
-                                              child: Text("حذف",
-                                                  style: const TextStyle(
-                                                      fontFamily: "pnuM",
-                                                      color: Colors.white)),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.pop(context, 1);
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text(
-                                              "الغاء",
-                                              style:
-                                                  TextStyle(fontFamily: "pnuM"),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.pop(context, 0);
-                                            },
-                                          ),
-                                        ],
+                          ),
+                        ),
+                      )),
+                      DataCell(Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        height: 50,
+                        width: 80,
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          color: Colors.red,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                // return object of type Dialog
+                                return Container(
+                                  // height: 200,
+                                  child: AlertDialog(
+                                    title: Texts(
+                                        fSize: 18,
+                                        color: Colors.red,
+                                        title: list![index].name,
+                                        weight: FontWeight.bold),
+                                    content: Texts(
+                                        fSize: 20,
+                                        color: Colors.black,
+                                        title:
+                                            "هل أنت متأكد من أنك تريد حذف هذا القسم",
+                                        weight: FontWeight.bold),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      MaterialButton(
+                                        minWidth: 50,
+                                        color: Colors.red,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 2),
+                                          child: Text("حذف",
+                                              style: const TextStyle(
+                                                  fontFamily: "pnuM",
+                                                  color: Colors.white)),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context, 1);
+                                        },
                                       ),
-                                    );
-                                  },
-                                ).then((value) {
-                                  print(value);
-                                  if (value == null) {
-                                    return;
-                                  } else if (value == 1) {
-                                    CategoryCubit.get(context).deleteCategory(status: 0,
-                                        context: context, id: list![index].id,endPoint: "category/delete-Category");
-                                  }
-                                });
+                                      TextButton(
+                                        child: Text(
+                                          "الغاء",
+                                          style:
+                                              TextStyle(fontFamily: "pnuM"),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context, 0);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
-                              child: Center(
-                                child: CustomText(
-                                  text: "حذف",
-                                  color: Colors.white,
-                                  weight: FontWeight.bold,
-                                ),
-                              ),
+                            ).then((value) {
+                              print(value);
+                              if (value == null) {
+                                return;
+                              } else if (value == 1) {
+                                CategoryCubit.get(context).deleteCategory(status: 0,
+                                    context: context, id: list![index].id,endPoint: "category/delete-Category");
+                              }
+                            });
+                          },
+                          child: Center(
+                            child: CustomText(
+                              text: "حذف",
+                              color: Colors.white,
+                              weight: FontWeight.bold,
                             ),
-                          )),
-                        ]))),
-          ],
-        ),
+                          ),
+                        ),
+                      )),
+                    ]))),
       ),
     );
   }

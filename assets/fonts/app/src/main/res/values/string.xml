@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Donyia</string>
-    <string name="facebook_app_id">503712607848624</string>
-    <string name="fb_login_protocol_scheme">fb503712607848624</string>
-    <string name="facebook_client_token">60c9e0bd2107ffc75eaba0d8bc5d3476</string>
-</resources>

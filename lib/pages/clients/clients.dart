@@ -191,24 +191,29 @@ class _ClientsPageState extends State<ClientsPage> {
               ),
               SizedBox(height: 10),
               Expanded(
-                  child: UserCubit.get(context).loadUsers
-                      ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 5,
-                              color: Colors.blue,
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      UserCubit.get(context).loadUsers
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 5,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
+                          : TableWidgetUsers(
+                              list: UserCubit.get(context).listUsers,
+                              name: "JDJDJD",
+                              image: "HDDDDDDD",
+                              id: "1",
+                              label: "الاقسام",
+                              onDelete: false,
+                              onUpdate: false,
                             ),
-                          ),
-                        )
-                      : TableWidgetUsers(
-                          list: UserCubit.get(context).listUsers,
-                          name: "JDJDJD",
-                          image: "HDDDDDDD",
-                          id: "1",
-                          label: "الاقسام",
-                          onDelete: false,
-                          onUpdate: false,
-                        )),
+                    ],
+                  )),
             ],
           ),
         );
@@ -234,7 +239,10 @@ class TableWidgetUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
       child: Container(
+       width: ResponsiveWidget.isSmallScreen(context)?null:1200,
+        
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -248,65 +256,60 @@ class TableWidgetUsers extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                columns: [
+        child: DataTable(
+            columnSpacing: 12,
+            horizontalMargin: 12,
+           
+            columns: [
 
-                  DataColumn2(
-                    label: Text('الاسم'),
-                    size: ColumnSize.L
-                  ),
+              DataColumn2(
+                label: Text('الاسم'),
+                size: ColumnSize.L
+              ),
 
-                  DataColumn2(
-                    label: Text('الصورة'),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn(
-                    label: Text('تاريخ التسجيل'),
-                  ),
-                  DataColumn2(
-                    label: Text("Id"),
-                    size: ColumnSize.L,
-                  ),
-                ],
-                rows: List<DataRow>.generate(list!.length, (index) {
-                  DateTime now =
-                      DateTime.parse(list![index].createdAt.toString());
-                  String formattedDate =
-                      DateFormat('yyyy-MM-dd – kk:mm').format(now);
+              DataColumn2(
+                label: Text('الصورة'),
+                size: ColumnSize.S,
+              ),
+              DataColumn(
+                label: Text('تاريخ التسجيل'),
+              ),
+              DataColumn2(
+                label: Text("رقم الهاتف"),
+                size: ColumnSize.L,
+              ),
+            ],
+            rows: List<DataRow>.generate(list!.length, (index) {
+              DateTime now =
+                  DateTime.parse(list![index].createdAt.toString());
+              String formattedDate =
+                  DateFormat('yyyy-MM-dd – kk:mm').format(now);
 
-                  return DataRow(cells: [
+              return DataRow(cells: [
 
-                    DataCell(CustomText(text: list![index].fullName)),
-                    DataCell(Container(
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(3),
-                          child: CachedNetworkImage(
-                            imageUrl: "$baseUrlImages${list![index].imageUrl}",
-                            height: 60,
-                            width: 100,
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
+                DataCell(CustomText(text: list![index].fullName)),
+                DataCell(Container(
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: CachedNetworkImage(
+                        imageUrl: "$baseUrlImages${list![index].imageUrl}",
+                        height: 60,
+                        width: 100,
+                        placeholder: (context, url) =>
+                            Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.error),
                       ),
-                    )),
-                    DataCell(CustomText(text: formattedDate)),
-                    DataCell(CustomText(text: "${list![index].id}")),
-                  ]);
-                })),
-          ],
-        ),
+                    ),
+                  ),
+                )),
+                DataCell(CustomText(text: formattedDate)),
+                DataCell(CustomText(text: "${list![index].userName}")),
+              ]);
+            })),
       ),
     );
   }

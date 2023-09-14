@@ -100,24 +100,29 @@ class _SittingScreenState extends State<SittingScreen> {
               ),
               SizedBox(height: 10),
               Expanded(
-                  child: SettingCubit.get(context).load
-                      ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 5,
-                              color: Colors.blue,
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      SettingCubit.get(context).load
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 5,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
+                          : TableWidgetSettings(
+                              list: SettingCubit.get(context).sittings,
+                              name: "JDJDJD",
+                              image: "HDDDDDDD",
+                              id: "1",
+                              label: "الاقسام",
+                              onDelete: false,
+                              onUpdate: false,
                             ),
-                          ),
-                        )
-                      : TableWidgetSettings(
-                          list: SettingCubit.get(context).sittings,
-                          name: "JDJDJD",
-                          image: "HDDDDDDD",
-                          id: "1",
-                          label: "الاقسام",
-                          onDelete: false,
-                          onUpdate: false,
-                        )),
+                    ],
+                  )),
             ],
           ),
         );
@@ -143,7 +148,9 @@ class TableWidgetSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
       child: Container(
+       width: ResponsiveWidget.isSmallScreen(context)?null:1200,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -157,155 +164,138 @@ class TableWidgetSettings extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Row(
-            //   children: [
-            //     SizedBox(
-            //       width: 10,
-            //     ),
-            //     CustomText(
-            //       text: label,
-            //       color: lightGrey,
-            //       weight: FontWeight.bold,
-            //     ),
-            //   ],
-            // ),
-            DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                columns: [
-                  DataColumn2(
-                    label: Text("Id"),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn(
-                    label: Text('الاسم'),
-                  ),
-                  DataColumn(
-                    label: Text('القيمة'),
-                  ),
-                  DataColumn(
-                    label: Text('تعديل'),
-                  ),
-                  // DataColumn(
-                  //   label: Text('حذف'),
-                  // ),
-                ],
-                rows: List<DataRow>.generate(list!.length, (index) {
-                  return DataRow(cells: [
-                    DataCell(CustomText(text: "${list![index].id}")),
-                    DataCell(CustomText(text: list![index].name)),
-                    DataCell(CustomText(text: list![index].value)),
-                    DataCell(Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      width: 80,
-                      child:list![index].name=="replay" ?SizedBox(): MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
-                        color: Colors.green,
-                        onPressed: () {
-                              // showDialogAction(context,list[index]);
-                          Get.to(AddSettingScreen(list![index], 1));
-                        },
-                        child: Center(
-                          child: CustomText(
-                            text: "تعديل",
-                            color: Colors.white,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
+        child: DataTable(
+            columnSpacing: 12,
+            horizontalMargin: 12,
+           
+            columns: [
+              DataColumn2(
+                label: Text("Id"),
+                size: ColumnSize.L,
+              ),
+              DataColumn(
+                label: Text('الاسم'),
+              ),
+              DataColumn(
+                label: Text('القيمة'),
+              ),
+              DataColumn(
+                label: Text('تعديل'),
+              ),
+              // DataColumn(
+              //   label: Text('حذف'),
+              // ),
+            ],
+            rows: List<DataRow>.generate(list!.length, (index) {
+              return DataRow(cells: [
+                DataCell(CustomText(text: "${list![index].id}")),
+                DataCell(CustomText(text: list![index].name)),
+                DataCell(CustomText(text: list![index].value)),
+                DataCell(Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 50,
+                  width: 80,
+                  child:list![index].name=="replay" ?SizedBox(): MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color: Colors.green,
+                    onPressed: () {
+                          // showDialogAction(context,list[index]);
+                      Get.to(AddSettingScreen(list![index], 1));
+                    },
+                    child: Center(
+                      child: CustomText(
+                        text: "تعديل",
+                        color: Colors.white,
+                        weight: FontWeight.bold,
                       ),
-                    )),
-                    // DataCell(Container(
-                    //   margin: EdgeInsets.symmetric(vertical: 5),
-                    //   height: 50,
-                    //   width: 80,
-                    //   child: MaterialButton(
-                    //     shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(4)),
-                    //     color: Colors.red,
-                    //     onPressed: () {
-                    //       showDialog(
-                    //         context: context,
-                    //         builder: (context) {
-                    //           // return object of type Dialog
-                    //           return Container(
-                    //             // height: 200,
-                    //             child: AlertDialog(
-                    //               title: Texts(
-                    //                   fSize: 18,
-                    //                   color: Colors.red,
-                    //                   title: list[index].value,
-                    //                   weight: FontWeight.bold),
-                    //               content: Texts(
-                    //                   fSize: 20,
-                    //                   color: Colors.black,
-                    //                   title:
-                    //                       "هل أنت متأكد من أنك تريد حذف هذا القسم",
-                    //                   weight: FontWeight.bold),
-                    //               actions: <Widget>[
-                    //                 // usually buttons at the bottom of the dialog
-                    //                 MaterialButton(
-                    //                   minWidth: 50,
-                    //                   color: Colors.red,
-                    //                   shape: RoundedRectangleBorder(
-                    //                       borderRadius:
-                    //                           BorderRadius.circular(4)),
-                    //                   child: Padding(
-                    //                     padding: EdgeInsets.symmetric(
-                    //                         horizontal: 15, vertical: 2),
-                    //                     child: Text("حذف",
-                    //                         style: const TextStyle(
-                    //                             fontFamily: "pnuM",
-                    //                             color: Colors.white)),
-                    //                   ),
-                    //                   onPressed: () {
-                    //                     Navigator.pop(context, 1);
-                    //                   },
-                    //                 ),
-                    //                 TextButton(
-                    //                   child: Text(
-                    //                     "الغاء",
-                    //                     style: TextStyle(fontFamily: "pnuM"),
-                    //                   ),
-                    //                   onPressed: () {
-                    //                     Navigator.pop(context, 0);
-                    //                   },
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           );
-                    //         },
-                    //       ).then((value) {
-                    //         print(value);
-                    //         if (value == null) {
-                    //           return;
-                    //         } else if (value == 1) {
-                    //           SettingCubit.get(context).deleteCategory(
-                    //               context: context,
-                    //               endPoint: "",
-                    //               id: list[index].id,
-                    //               status: 0);
-                    //         }
-                    //       });
-                    //     },
-                    //     child: Center(
-                    //       child: CustomText(
-                    //         text: "حذف",
-                    //         color: Colors.white,
-                    //         weight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )),
-                  ]);
-                })),
-          ],
-        ),
+                    ),
+                  ),
+                )),
+                // DataCell(Container(
+                //   margin: EdgeInsets.symmetric(vertical: 5),
+                //   height: 50,
+                //   width: 80,
+                //   child: MaterialButton(
+                //     shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(4)),
+                //     color: Colors.red,
+                //     onPressed: () {
+                //       showDialog(
+                //         context: context,
+                //         builder: (context) {
+                //           // return object of type Dialog
+                //           return Container(
+                //             // height: 200,
+                //             child: AlertDialog(
+                //               title: Texts(
+                //                   fSize: 18,
+                //                   color: Colors.red,
+                //                   title: list[index].value,
+                //                   weight: FontWeight.bold),
+                //               content: Texts(
+                //                   fSize: 20,
+                //                   color: Colors.black,
+                //                   title:
+                //                       "هل أنت متأكد من أنك تريد حذف هذا القسم",
+                //                   weight: FontWeight.bold),
+                //               actions: <Widget>[
+                //                 // usually buttons at the bottom of the dialog
+                //                 MaterialButton(
+                //                   minWidth: 50,
+                //                   color: Colors.red,
+                //                   shape: RoundedRectangleBorder(
+                //                       borderRadius:
+                //                           BorderRadius.circular(4)),
+                //                   child: Padding(
+                //                     padding: EdgeInsets.symmetric(
+                //                         horizontal: 15, vertical: 2),
+                //                     child: Text("حذف",
+                //                         style: const TextStyle(
+                //                             fontFamily: "pnuM",
+                //                             color: Colors.white)),
+                //                   ),
+                //                   onPressed: () {
+                //                     Navigator.pop(context, 1);
+                //                   },
+                //                 ),
+                //                 TextButton(
+                //                   child: Text(
+                //                     "الغاء",
+                //                     style: TextStyle(fontFamily: "pnuM"),
+                //                   ),
+                //                   onPressed: () {
+                //                     Navigator.pop(context, 0);
+                //                   },
+                //                 ),
+                //               ],
+                //             ),
+                //           );
+                //         },
+                //       ).then((value) {
+                //         print(value);
+                //         if (value == null) {
+                //           return;
+                //         } else if (value == 1) {
+                //           SettingCubit.get(context).deleteCategory(
+                //               context: context,
+                //               endPoint: "",
+                //               id: list[index].id,
+                //               status: 0);
+                //         }
+                //       });
+                //     },
+                //     child: Center(
+                //       child: CustomText(
+                //         text: "حذف",
+                //         color: Colors.white,
+                //         weight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // )),
+              ]);
+            })),
       ),
     );
   }
